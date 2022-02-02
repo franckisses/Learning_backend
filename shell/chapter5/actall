@@ -1,0 +1,10 @@
+#! /usr/bin/env bash 
+
+# 批量修改文件权限
+
+for FN in $*
+do 
+    echo changing $FN
+    chmod 0750 $FN
+done
+
