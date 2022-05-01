@@ -10,4 +10,8 @@ def clip(text:str, max_len:'int >0'=80) -> str:
         else:
             space_after = text.rfind(' ', max_len)
             if apace_after >= 0:
+                end = space_after
+    if end is None:
+        end = len(text)
+    return text[:end].rstrip()
                 
