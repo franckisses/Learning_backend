@@ -12,7 +12,18 @@ metro_data = [
 Latlong = namedtuple('LatLong', 'lat long')
 Metropolis = namedtuple('Metropolis', 'name cc pop coord')
 
-metro_areas = [Metropolis(name, cc, pop, Latlong(lat, lonh))]
+metro_areas = [Metropolis(name, cc, pop, Latlong(lat, long))
+    for name, cc, pop, (lat, long) in metro_data
+]
 
 print(metro_areas[0])
 
+print(metro_areas[0].coord.lat)
+
+
+from operator import attrgetter 
+
+name_lat = attrgetter('name', 'coord.lat')
+print(name_lat)
+for city in sorted(metro_areas, key=attrgetter('coord.lat')):
+    print(name_lat(city))
