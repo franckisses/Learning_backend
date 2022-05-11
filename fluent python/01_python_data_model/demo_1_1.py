@@ -1,4 +1,5 @@
 import collections
+import numpy
 
 Card  = collections.namedtuple('Card',['rank', 'suit'])
 
@@ -45,10 +46,10 @@ Card(rank='5', suit='clubs')
 <demo_1_1.FrenchDeck object at 0x7ffa8d2c7a20>
 >>> deck[:3]
 [Card(rank='2', suit='spades'), Card(rank='3', suit='spades'), Card(rank='4', suit='spades')]
-"""        
-
+"""
 
 """
 for card in sorted(deck, key=spades_link):
     print(card)
 """
+
