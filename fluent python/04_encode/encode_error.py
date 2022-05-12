@@ -24,3 +24,4 @@ b'S?o Paulo'
 >>> city.encode('cp437', errors='xmlcharrefreplace')
 b'S&#227;o Paulo'
 """
+
