@@ -33,10 +33,19 @@ class Vector2d:
     def __bool__(self):
         return bool(abs(self))  # <10>
 
-    @classmethod
-    def frombytes(cls, octets):
-        typecode = chr(octets[0])
-        memv = memoryview(octets[1:].cast(typecode))
-        return cls(*memv)
+    def __format__(self, fmt_spec=''):
+        components = (format(c, fmt_spec) for c in self)
+        return '({}, {})'.format(*components)
 
+"""
+>>> from example_9_5 import *
+>>> v1 = Vector2d(3, 4)
+>>> v1
+Vector2d(3.0, 4.0)
+>>> format(v1)
+'(3.0, 4.0)'
+>>> format(v1, '.3f')
+'(3.000, 4.000)'
+>>>
 
+"""
