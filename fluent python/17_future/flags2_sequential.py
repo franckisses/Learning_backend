@@ -70,3 +70,15 @@ def download_many(cc_list, base_url, verbose, max_req):
 
 if __name__ == '__main__':
     main(download_many, DEFAULT_CONCUR_REQ, MAX_CONCUR_REQ)
+
+
+"""
+DELAY site: http://localhost/html/flags
+Searching for 26 flags: from BA to BZ
+1 concurrent connection will be used.
+100%|████████████████████████████████████████████████████████████████████████████████████████████| 26/26 [00:00<00:00, 230.24it/s]
+--------------------
+17 flags downloaded.
+9 not found.
+Elapsed time: 0.12s
+"""
