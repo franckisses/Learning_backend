@@ -4,7 +4,7 @@ import warnings
 import os
 import json
 
-URL = 'http://www.oreilly.com/pub/sc/osconfeed'
+URL = 'http://localhost/html/osconfeed.json'
 JSON = 'data/osconfeed.json'
 
 def load():
@@ -14,5 +14,5 @@ def load():
         with urlopen(URL) as remote, open(JSON,'wb') as local:
             local.write(remote.read())
 
-#    with open(JSON) as fp:
-#        return json.load(fp)
+    with open(JSON) as fp:
+        return json.load(fp)
