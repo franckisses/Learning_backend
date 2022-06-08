@@ -101,3 +101,33 @@ def load_db(db):
             record['serial'] = key
             db[key] = factory(**record)  # <8>
 # END SCHEDULE2_LOAD
+
+"""
+>> from schedule2 import *
+>>> import shelve
+>>> db = shelve.open(DB_NAME)
+>>> if CONFERENCE not in db:
+...     lo
+load_db(  locals(
+...     load_db(db)
+...
+/Users/gongyan/Project/liangpi/fluent python/19_dynmatic/schedule2.py:90: UserWarning: loading data/schedule2_db
+  warnings.warn('loading ' + DB_NAME)
+>>> type(db)
+<class 'shelve.DbfilenameShelf'>
+>>> DbRecord.set_db(db)
+>>> DbRecord.fetch('event.33950')
+<Event 'There *Will* Be Bugs'>
+>>> event = DbRecord.fetch('event.33950')
+>>> event
+<Event 'There *Will* Be Bugs'>
+>>> event.venue
+<DbRecord serial='venue.1449'>
+>>> event.venue.name
+'Portland 251'
+>>> for spkr in event.speakers:
+...     print('{0.serial}: {0.name}'.format(spkr))
+...
+speaker.3471: Anna Martelli Ravenscroft
+speaker.5199: Alex Martelli
+"""
