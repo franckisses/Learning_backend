@@ -89,8 +89,10 @@ def load_db(db):
     raw_data = osconfeed.load()
     warnings.warn('loading ' + DB_NAME)
     for collection, rec_list in raw_data['Schedule'].items():
+        print('data', collection)
         record_type = collection[:-1]  # <1>
         cls_name = record_type.capitalize()  # <2>
+        print('cls name:',cls_name)
         cls = globals().get(cls_name, DbRecord)  # <3>
         if inspect.isclass(cls) and issubclass(cls, DbRecord):  # <4>
             factory = cls  # <5>
@@ -107,8 +109,6 @@ def load_db(db):
 >>> import shelve
 >>> db = shelve.open(DB_NAME)
 >>> if CONFERENCE not in db:
-...     lo
-load_db(  locals(
 ...     load_db(db)
 ...
 /Users/gongyan/Project/liangpi/fluent python/19_dynmatic/schedule2.py:90: UserWarning: loading data/schedule2_db
