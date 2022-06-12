@@ -1,0 +1,59 @@
+>>>
+>>> class Class:
+...     data = 'the class data attr'
+...     @property
+...     def prop(self):
+...         return 'the prop value'
+...
+>>> obj = Class()
+>>> obj.data
+'the class data attr'
+>>> obj.prop
+'the prop value'
+>>> obj.data = 'bar'
+>>> obj.data
+'bar'
+>>> vars(obj)
+{'data': 'bar'}
+>>> obj.prop
+'the prop value'
+# 如果实例和所属于的类都有同名数据属性，那么实例属性就会覆盖类属性
+--- > class data 和obj data 相同
+
+
+>>> Class.prop
+<property object at 0x7fcd4405af48>
+>>> obj.prop
+'the prop value'
+>>> obj.prop = 'foo'
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: can't set attribute
+>>> obj.___dict__
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'Class' object has no attribute '___dict__'
+>>> obj.__dict__
+{'data': 'bar'}
+>>> obj.__dict__['prop'] = 'fo'
+>>> vars(obj)
+{'data': 'bar', 'prop': 'fo'}
+>>> obj.prop
+'the prop value'
+>>> Class.prop='baz'
+>>> obj.prop
+'fo'
+# 实例属性不会遮盖类属性
+
+
+>>> obj.data
+'bar'
+>>> Class.data
+'the class data attr'
+>>> Class.data = property(lambda self: 'the "data" prop value')
+>>> obj.data
+'the "data" prop value'
+>>> del Class.data
+>>> obj.data
+'bar'
+# 新添加的类特性遮盖现有的实例属性
