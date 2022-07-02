@@ -76,7 +76,13 @@ class MyDate:
         """
         return next month
         """
-        pass
+        last_m_s = (self.now.replace(day=1) - datetime.timedelta(days=1))
+        last_m_e = self.now.replace(day=1) - datetime.timedelta(days=1)
+        last_m_s_str = last_m_s.strftime('%Y%m01')
+        last_m_s_date = last_m_s.strftime('%Y-%m-01')
+        last_m_e_str = last_m_e.strftime('%Y%m%d')
+        last_m_e_date = last_m_e.strftime('%Y-%m-%d')
+        return last_m_s_str,last_m_s_date,last_m_e_str,last_m_e_date
 
     def currentmonth(self):
         """
@@ -94,5 +100,19 @@ class MyDate:
         """
         return next month
         """
-        pass
-
+        if self.now.month == 12:
+            next_m_s = datetime.datetime(year=self.now.year+1,month=1,day=1)
+        else:
+            next_m_s = datetime.datetime(year=self.now.year,
+                    month=self.now.month+1, day=1)
+        first_day_month = datetime.date(self.now.year, self.now.month, 1)
+        days_num = calendar.monthrange(first_day_month.year, first_day_month.month)[1]
+        next_month_first_day = first_day_month + datetime.timedelta(days=days_num)
+        next_month = next_month_first_day.month
+        next_month_days = calendar.monthrange(next_month_first_day.year, next_month_first_day.month)[1]  # 获取下个月有多少天
+        next_m_e = next_month_first_day + datetime.timedelta(days=next_month_days - 1)
+        next_m_s_str = next_m_s.strftime('%Y%m%d')
+        next_m_s_date = next_m_s.strftime('%Y-%m-%d')
+        next_m_e_str = next_m_e.strftime('%Y%m%d')
+        next_m_e_date = next_m_e.strftime('%Y-%m-%d')
+        return next_m_s_str,next_m_s_date,next_m_e_str,next_m_e_date
