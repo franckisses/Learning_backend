@@ -166,3 +166,13 @@ min_IO_cost = 1 * 4.0 + (ceil(0.024 * 45)-1) * 1.5 = 5.0
 select tablename.attname, correlating from pg_stats where tablename='tbl_corr';
 ```
 
+
+
+#### 用于控制全表扫描或索引扫描
+
+```
+select name.setting from pg_settings where name like '%scan%';
+
+通过set name.settting =on/off；来控制
+```
+
