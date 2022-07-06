@@ -87,7 +87,7 @@ Index Scan成本估算
 
  运行成本计算公式， 索引扫描的运行成本是表和索引的CPU成本和IO(输入输出) 成本之和。
 $$
-run cost=（'index\; cpu\; cost + 'table\; cpu\; cost') + ('index\; IO\; cost' + 'table\; IO\; cost')
+run\; cost=（'index\; cpu\; cost + 'table\; cpu\; cost') + ('index\; IO\; cost' + 'table\; IO\; cost')
 $$
 前三个成本计算公式：
 $$
@@ -120,8 +120,6 @@ select most_common_vals, most_common_freqs from pg_stats where tablename ='count
 ​	是一个值列表，用于将列的值分成大致相等的总体组
 
 #### buckets and histogram_bounds
-
-
 
 默认情况下，直方图的界限被划分为100个桶，上面查询说明了这个例子中的桶和响应的直方图范围，bucket从0开始编号，每个bucket存储大约相同数量的元祖，直方图的界限的值是相应桶的界限，例如，直方图上界的第0个值是1，这意味着它是存储在bucket_0中的元祖的最小值，第一个值为100，这是存储在bucket_1中的最小值。
 
@@ -175,4 +173,33 @@ select name.setting from pg_settings where name like '%scan%';
 
 通过set name.settting =on/off；来控制
 ```
+
+### seq_page_cost & random_page_cost 相关参数配置
+
+HDD硬盘
+
+```
+seq_page_cost = 1.0
+random_page_cost = 4.0
+```
+
+SSD硬盘
+
+```
+seq_page_cost = 1.0
+random_page_cost = 1.0
+```
+
+
+
+### analyze
+
+```
+-- 具体的执行时间actual time
+explain analyze select * from public.test;
+-- 加buffers,可以看到具体的缓冲区命中情况
+explain (analyze,buffers) select * from public.test;
+```
+
+
 
