@@ -546,3 +546,335 @@ group by sell_date
 order by sell_date
 ```
 
+#### [1527. 患某种疾病的患者](https://leetcode.cn/problems/patients-with-a-condition/)
+
+患者信息表： `Patients`
+
+```
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| patient_id   | int     |
+| patient_name | varchar |
+| conditions   | varchar |
++--------------+---------+
+patient_id （患者 ID）是该表的主键。
+'conditions' （疾病）包含 0 个或以上的疾病代码，以空格分隔。
+这个表包含医院中患者的信息。
+```
+
+写一条 SQL 语句，查询患有 I 类糖尿病的患者 ID （patient_id）、患者姓名（patient_name）以及其患有的所有疾病代码（conditions）。I 类糖尿病的代码总是包含前缀 `DIAB1` 。
+
+按 **任意顺序** 返回结果表。
+
+查询结果格式如下示例所示。
+
+**示例 1:**
+
+```
+输入：
+Patients表：
++------------+--------------+--------------+
+| patient_id | patient_name | conditions   |
++------------+--------------+--------------+
+| 1          | Daniel       | YFEV COUGH   |
+| 2          | Alice        |              |
+| 3          | Bob          | DIAB100 MYOP |
+| 4          | George       | ACNE DIAB100 |
+| 5          | Alain        | DIAB201      |
++------------+--------------+--------------+
+输出：
++------------+--------------+--------------+
+| patient_id | patient_name | conditions   |
++------------+--------------+--------------+
+| 3          | Bob          | DIAB100 MYOP |
+| 4          | George       | ACNE DIAB100 | 
++------------+--------------+--------------+
+解释：Bob 和 George 都患有代码以 DIAB1 开头的疾病。
+```
+
+SQL
+
+```sql
+select patient_id,patient_name,conditions from patients where conditions like 'DIAB1%'
+or conditions like '% DIAB1%'
+```
+
+#### [1965. 丢失信息的雇员](https://leetcode.cn/problems/employees-with-missing-information/)
+
+表: `Employees`
+
+```
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| employee_id | int     |
+| name        | varchar |
++-------------+---------+
+employee_id 是这个表的主键。
+每一行表示雇员的id 和他的姓名。
+```
+
+表: `Salaries`
+
+```
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| employee_id | int     |
+| salary      | int     |
++-------------+---------+
+employee_id is 这个表的主键。
+每一行表示雇员的id 和他的薪水。 
+```
+
+写出一个查询语句，找到所有 **丢失信息** 的雇员id。当满足下面一个条件时，就被认为是雇员的信息丢失：
+
+- 雇员的 **姓名** 丢失了，或者
+- 雇员的 **薪水信息** 丢失了，或者
+
+返回这些雇员的id  `employee_id` ， **从小到大排序** 。
+
+查询结果格式如下面的例子所示。 
+
+**示例 1：**
+
+```
+输入：
+Employees table:
++-------------+----------+
+| employee_id | name     |
++-------------+----------+
+| 2           | Crew     |
+| 4           | Haven    |
+| 5           | Kristian |
++-------------+----------+
+Salaries table:
++-------------+--------+
+| employee_id | salary |
++-------------+--------+
+| 5           | 76071  |
+| 1           | 22517  |
+| 4           | 63539  |
++-------------+--------+
+输出：
++-------------+
+| employee_id |
++-------------+
+| 1           |
+| 2           |
++-------------+
+解释：
+雇员1，2，4，5 都工作在这个公司。
+1号雇员的姓名丢失了。
+2号雇员的薪水信息丢失了。
+```
+
+SQL
+
+```
+select employee_id from 
+(
+    select employee_id from employees
+    union all
+    select employee_id from salaries
+) as ans
+group by employee_id 
+having count(1) =1
+order by employee_id
+```
+
+#### [1795. 每个产品在不同商店的价格](https://leetcode.cn/problems/rearrange-products-table/)
+
+表：`Products`
+
+```
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| product_id  | int     |
+| store1      | int     |
+| store2      | int     |
+| store3      | int     |
++-------------+---------+
+这张表的主键是product_id（产品Id）。
+每行存储了这一产品在不同商店store1, store2, store3的价格。
+如果这一产品在商店里没有出售，则值将为null。
+```
+
+请你重构 `Products` 表，查询每个产品在不同商店的价格，使得输出的格式变为`(product_id, store, price)` 。如果这一产品在商店里没有出售，则不输出这一行。
+
+输出结果表中的 **顺序不作要求** 。
+
+查询输出格式请参考下面示例。 
+
+**示例 1：**
+
+```
+输入：
+Products table:
++------------+--------+--------+--------+
+| product_id | store1 | store2 | store3 |
++------------+--------+--------+--------+
+| 0          | 95     | 100    | 105    |
+| 1          | 70     | null   | 80     |
++------------+--------+--------+--------+
+输出：
++------------+--------+-------+
+| product_id | store  | price |
++------------+--------+-------+
+| 0          | store1 | 95    |
+| 0          | store2 | 100   |
+| 0          | store3 | 105   |
+| 1          | store1 | 70    |
+| 1          | store3 | 80    |
++------------+--------+-------+
+解释：
+产品0在store1，store2,store3的价格分别为95,100,105。
+产品1在store1，store3的价格分别为70,80。在store2无法买到。
+```
+
+SQL
+
+```
+
+select product_id,'store1' as store,store1  as price
+from products 
+where store1 is not null
+group by product_id,store1
+union all
+select product_id,'store2' as store,store2 
+from products 
+where store2 is not null
+group by product_id,store2
+union all 
+select product_id,'store3' as store,store3 
+from products 
+where store3 is not null
+group by product_id,store3
+```
+
+#### [608. 树节点](https://leetcode.cn/problems/tree-node/)
+
+SQL架构
+
+给定一个表 `tree`，**id** 是树节点的编号， **p_id** 是它父节点的 **id 。**
+
+```
++----+------+
+| id | p_id |
++----+------+
+| 1  | null |
+| 2  | 1    |
+| 3  | 1    |
+| 4  | 2    |
+| 5  | 2    |
++----+------+
+```
+
+树中每个节点属于以下三种类型之一：
+
+- 叶子：如果这个节点没有任何孩子节点。
+- 根：如果这个节点是整棵树的根，即没有父节点。
+- 内部节点：如果这个节点既不是叶子节点也不是根节点。
+
+写一个查询语句，输出所有节点的编号和节点的类型，并将结果按照节点编号排序。上面样例的结果为：
+
+```
++----+------+
+| id | Type |
++----+------+
+| 1  | Root |
+| 2  | Inner|
+| 3  | Leaf |
+| 4  | Leaf |
+| 5  | Leaf |
++----+------+
+```
+
+ **解释**
+
+- 节点 '1' 是根节点，因为它的父节点是 NULL ，同时它有孩子节点 '2' 和 '3' 。
+
+- 节点 '2' 是内部节点，因为它有父节点 '1' ，也有孩子节点 '4' 和 '5' 。
+
+- 节点 '3', '4' 和 '5' 都是叶子节点，因为它们都有父节点同时没有孩子节点。
+
+- 样例中树的形态如下：
+
+   
+
+  ```
+  			  1
+  			/   \
+      2       3
+    /   \
+  4      5
+  ```
+
+   **注意**
+
+如果树中只有一个节点，你只需要输出它的根属性。
+
+SQL
+
+```
+None
+```
+
+#### [176. 第二高的薪水](https://leetcode.cn/problems/second-highest-salary/)
+
+`Employee` 表：
+
+```
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| id          | int  |
+| salary      | int  |
++-------------+------+
+id 是这个表的主键。
+表的每一行包含员工的工资信息。
+```
+
+ 编写一个 SQL 查询，获取并返回 `Employee` 表中第二高的薪水 。如果不存在第二高的薪水，查询应该返回 `null` 。
+
+查询结果如下例所示。
+
+**示例 1：**
+
+```
+输入：
+Employee 表：
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+输出：
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| 200                 |
++---------------------+
+```
+
+**示例 2：**
+
+```
+输入：
+Employee 表：
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
++----+--------+
+输出：
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| null                |
++---------------------+
+```
