@@ -116,3 +116,7 @@ class MyDate:
         next_m_e_str = next_m_e.strftime('%Y%m%d')
         next_m_e_date = next_m_e.strftime('%Y-%m-%d')
         return next_m_s_str,next_m_s_date,next_m_e_str,next_m_e_date
+    
+    def __call__(self):
+        pass
+
