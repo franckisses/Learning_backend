@@ -811,6 +811,7 @@ SQL架构
   
   ```
   
+
 如果树中只有一个节点，你只需要输出它的根属性。
 
 SQL
@@ -972,5 +973,217 @@ SQL
 select a.firstName,a.lastName,b.city,b.state 
 from person a left join address b 
 on a.personid =b.personid
+```
+
+#### [1581. 进店却未进行过交易的顾客](https://leetcode.cn/problems/customer-who-visited-but-did-not-make-any-transactions/)
+
+表：`Visits`
+
+```
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| visit_id    | int     |
+| customer_id | int     |
++-------------+---------+
+visit_id 是该表的主键。
+该表包含有关光临过购物中心的顾客的信息。 
+```
+
+表：`Transactions`
+
+```
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| transaction_id | int     |
+| visit_id       | int     |
+| amount         | int     |
++----------------+---------+
+transaction_id 是此表的主键。
+此表包含 visit_id 期间进行的交易的信息。 
+```
+
+有一些顾客可能光顾了购物中心但没有进行交易。请你编写一个 SQL 查询，来查找这些顾客的 ID ，以及他们只光顾不交易的次数。
+
+返回以 **任何顺序** 排序的结果表。
+
+查询结果格式如下例所示。 
+
+**示例 1：**
+
+```
+输入:
+Visits
++----------+-------------+
+| visit_id | customer_id |
++----------+-------------+
+| 1        | 23          |
+| 2        | 9           |
+| 4        | 30          |
+| 5        | 54          |
+| 6        | 96          |
+| 7        | 54          |
+| 8        | 54          |
++----------+-------------+
+Transactions
++----------------+----------+--------+
+| transaction_id | visit_id | amount |
++----------------+----------+--------+
+| 2              | 5        | 310    |
+| 3              | 5        | 300    |
+| 9              | 5        | 200    |
+| 12             | 1        | 910    |
+| 13             | 2        | 970    |
++----------------+----------+--------+
+输出:
++-------------+----------------+
+| customer_id | count_no_trans |
++-------------+----------------+
+| 54          | 2              |
+| 30          | 1              |
+| 96          | 1              |
++-------------+----------------+
+解释:
+ID = 23 的顾客曾经逛过一次购物中心，并在 ID = 12 的访问期间进行了一笔交易。
+ID = 9 的顾客曾经逛过一次购物中心，并在 ID = 13 的访问期间进行了一笔交易。
+ID = 30 的顾客曾经去过购物中心，并且没有进行任何交易。
+ID = 54 的顾客三度造访了购物中心。在 2 次访问中，他们没有进行任何交易，在 1 次访问中，他们进行了 3 次交易。
+ID = 96 的顾客曾经去过购物中心，并且没有进行任何交易。
+如我们所见，ID 为 30 和 96 的顾客一次没有进行任何交易就去了购物中心。顾客 54 也两次访问了购物中心并且没有进行任何交易。
+```
+
+SQL
+
+```sql
+select customer_id,count(1) as count_no_trans 
+from (
+select a.customer_id,b.transaction_id 
+from visits a
+left join transactions b 
+on a.visit_id=b.visit_id
+where b.transaction_id is null 
+) a 
+group by customer_id
+```
+
+#### [1148. 文章浏览 I](https://leetcode.cn/problems/article-views-i/)
+
+`Views` 表：
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| article_id    | int     |
+| author_id     | int     |
+| viewer_id     | int     |
+| view_date     | date    |
++---------------+---------+
+此表无主键，因此可能会存在重复行。
+此表的每一行都表示某人在某天浏览了某位作者的某篇文章。
+请注意，同一人的 author_id 和 viewer_id 是相同的。
+```
+
+请编写一条 SQL 查询以找出所有浏览过自己文章的作者，结果按照 id 升序排列。
+
+查询结果的格式如下所示：
+
+```
+Views 表：
++------------+-----------+-----------+------------+
+| article_id | author_id | viewer_id | view_date  |
++------------+-----------+-----------+------------+
+| 1          | 3         | 5         | 2019-08-01 |
+| 1          | 3         | 6         | 2019-08-02 |
+| 2          | 7         | 7         | 2019-08-01 |
+| 2          | 7         | 6         | 2019-08-02 |
+| 4          | 7         | 1         | 2019-07-22 |
+| 3          | 4         | 4         | 2019-07-21 |
+| 3          | 4         | 4         | 2019-07-21 |
++------------+-----------+-----------+------------+
+
+结果表：
++------+
+| id   |
++------+
+| 4    |
+| 7    |
++------+
+```
+
+SQL
+
+```sql
+select distinct author_id as id from 
+views
+where author_id = viewer_id 
+order by author_id 
+```
+
+#### [197. 上升的温度](https://leetcode.cn/problems/rising-temperature/)
+
+SQL架构
+
+表： `Weather`
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| id            | int     |
+| recordDate    | date    |
+| temperature   | int     |
++---------------+---------+
+id 是这个表的主键
+该表包含特定日期的温度信息
+```
+
+ 
+
+编写一个 SQL 查询，来查找与之前（昨天的）日期相比温度更高的所有日期的 `id` 。
+
+返回结果 **不要求顺序** 。
+
+查询结果格式如下例。
+
+ 
+
+**示例 1：**
+
+```
+输入：
+Weather 表：
++----+------------+-------------+
+| id | recordDate | Temperature |
++----+------------+-------------+
+| 1  | 2015-01-01 | 10          |
+| 2  | 2015-01-02 | 25          |
+| 3  | 2015-01-03 | 20          |
+| 4  | 2015-01-04 | 30          |
++----+------------+-------------+
+输出：
++----+
+| id |
++----+
+| 2  |
+| 4  |
++----+
+解释：
+2015-01-02 的温度比前一天高（10 -> 25）
+2015-01-04 的温度比前一天高（20 -> 30）
+```
+
+SQL
+
+```sql
+SELECT
+    weather.id AS 'Id'
+FROM
+    weather
+        JOIN
+    weather w ON DATEDIFF(weather.recordDate, w.recordDate) = 1
+        AND weather.Temperature > w.Temperature
+;
 ```
 
