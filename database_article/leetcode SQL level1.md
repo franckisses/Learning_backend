@@ -1187,3 +1187,308 @@ FROM
 ;
 ```
 
+#### [607. 销售员](https://leetcode.cn/problems/sales-person/)
+
+表: `SalesPerson`
+
+```
++-----------------+---------+
+| Column Name     | Type    |
++-----------------+---------+
+| sales_id        | int     |
+| name            | varchar |
+| salary          | int     |
+| commission_rate | int     |
+| hire_date       | date    |
++-----------------+---------+
+sales_id 是该表的主键列。
+该表的每一行都显示了销售人员的姓名和 ID ，以及他们的工资、佣金率和雇佣日期。
+```
+
+表: `Company`
+
+```
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| com_id      | int     |
+| name        | varchar |
+| city        | varchar |
++-------------+---------+
+com_id 是该表的主键列。
+该表的每一行都表示公司的名称和 ID ，以及公司所在的城市。
+```
+
+表: `Orders`
+
+```
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| order_id    | int  |
+| order_date  | date |
+| com_id      | int  |
+| sales_id    | int  |
+| amount      | int  |
++-------------+------+
+order_id 是该表的主键列。
+com_id 是 Company 表中 com_id 的外键。
+sales_id 是来自销售员表 sales_id 的外键。
+该表的每一行包含一个订单的信息。这包括公司的 ID 、销售人员的 ID 、订单日期和支付的金额。
+```
+
+ 编写一个SQL查询，报告没有任何与名为 **“RED”** 的公司相关的订单的所有销售人员的姓名。
+
+以 **任意顺序** 返回结果表。
+
+查询结果格式如下所示. 
+
+**示例：**
+
+```
+输入：
+SalesPerson 表:
++----------+------+--------+-----------------+------------+
+| sales_id | name | salary | commission_rate | hire_date  |
++----------+------+--------+-----------------+------------+
+| 1        | John | 100000 | 6               | 4/1/2006   |
+| 2        | Amy  | 12000  | 5               | 5/1/2010   |
+| 3        | Mark | 65000  | 12              | 12/25/2008 |
+| 4        | Pam  | 25000  | 25              | 1/1/2005   |
+| 5        | Alex | 5000   | 10              | 2/3/2007   |
++----------+------+--------+-----------------+------------+
+Company 表:
++--------+--------+----------+
+| com_id | name   | city     |
++--------+--------+----------+
+| 1      | RED    | Boston   |
+| 2      | ORANGE | New York |
+| 3      | YELLOW | Boston   |
+| 4      | GREEN  | Austin   |
++--------+--------+----------+
+Orders 表:
++----------+------------+--------+----------+--------+
+| order_id | order_date | com_id | sales_id | amount |
++----------+------------+--------+----------+--------+
+| 1        | 1/1/2014   | 3      | 4        | 10000  |
+| 2        | 2/1/2014   | 4      | 5        | 5000   |
+| 3        | 3/1/2014   | 1      | 1        | 50000  |
+| 4        | 4/1/2014   | 1      | 4        | 25000  |
++----------+------------+--------+----------+--------+
+输出：
++------+
+| name |
++------+
+| Amy  |
+| Mark |
+| Alex |
++------+
+解释：
+根据表 orders 中的订单 '3' 和 '4' ，容易看出只有 'John' 和 'Pam' 两个销售员曾经向公司 'RED' 销售过。
+所以我们需要输出表 salesperson 中所有其他人的名字。
+```
+
+SQL
+
+```sql
+select name from salesperson where name not in 
+(
+select  distinct a.name 
+from salesperson a 
+left join orders b on a.sales_id=b.sales_id 
+left join company c on b.com_id=c.com_id
+where c.name ='Red'
+)  
+```
+
+#### [1141. 查询近30天活跃用户数](https://leetcode.cn/problems/user-activity-for-the-past-30-days-i/)
+
+活动记录表：`Activity`
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| user_id       | int     |
+| session_id    | int     |
+| activity_date | date    |
+| activity_type | enum    |
++---------------+---------+
+该表是用户在社交网站的活动记录。
+该表没有主键，可能包含重复数据。
+activity_type 字段为以下四种值 ('open_session', 'end_session', 'scroll_down', 'send_message')。
+每个 session_id 只属于一个用户。
+```
+
+ 请写SQL查询出截至 `2019-07-27`（包含2019-07-27），近 `30` 天的每日活跃用户数（当天只要有一条活动记录，即为活跃用户）。
+
+以 **任意顺序** 返回结果表。
+
+查询结果示例如下。
+
+**示例 1:**
+
+```sql
+输入：
+Activity table:
++---------+------------+---------------+---------------+
+| user_id | session_id | activity_date | activity_type |
++---------+------------+---------------+---------------+
+| 1       | 1          | 2019-07-20    | open_session  |
+| 1       | 1          | 2019-07-20    | scroll_down   |
+| 1       | 1          | 2019-07-20    | end_session   |
+| 2       | 4          | 2019-07-20    | open_session  |
+| 2       | 4          | 2019-07-21    | send_message  |
+| 2       | 4          | 2019-07-21    | end_session   |
+| 3       | 2          | 2019-07-21    | open_session  |
+| 3       | 2          | 2019-07-21    | send_message  |
+| 3       | 2          | 2019-07-21    | end_session   |
+| 4       | 3          | 2019-06-25    | open_session  |
+| 4       | 3          | 2019-06-25    | end_session   |
++---------+------------+---------------+---------------+
+输出：
++------------+--------------+ 
+| day        | active_users |
++------------+--------------+ 
+| 2019-07-20 | 2            |
+| 2019-07-21 | 2            |
++------------+--------------+ 
+解释：注意非活跃用户的记录不需要展示。
+```
+
+SQL
+
+```sql
+select activity_date day, count(distinct user_id) active_users
+from activity
+where datediff('2019-07-27', activity_date) >= 0 AND datediff('2019-07-27', activity_date) <30
+group by activity_date
+```
+
+#### [1693. 每天的领导和合伙人](https://leetcode.cn/problems/daily-leads-and-partners/)
+
+表：`DailySales`
+
+```
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| date_id     | date    |
+| make_name   | varchar |
+| lead_id     | int     |
+| partner_id  | int     |
++-------------+---------+
+该表没有主键。
+该表包含日期、产品的名称，以及售给的领导和合伙人的编号。
+名称只包含小写英文字母。
+```
+
+写一条 SQL 语句，使得对于每一个 `date_id` 和 `make_name`，返回**不同**的 `lead_id` 以及**不同**的 `partner_id` 的数量。
+
+按 **任意顺序** 返回结果表。
+
+查询结果格式如下示例所示
+
+**示例 1:**
+
+```sql
+输入：
+DailySales 表：
++-----------+-----------+---------+------------+
+| date_id   | make_name | lead_id | partner_id |
++-----------+-----------+---------+------------+
+| 2020-12-8 | toyota    | 0       | 1          |
+| 2020-12-8 | toyota    | 1       | 0          |
+| 2020-12-8 | toyota    | 1       | 2          |
+| 2020-12-7 | toyota    | 0       | 2          |
+| 2020-12-7 | toyota    | 0       | 1          |
+| 2020-12-8 | honda     | 1       | 2          |
+| 2020-12-8 | honda     | 2       | 1          |
+| 2020-12-7 | honda     | 0       | 1          |
+| 2020-12-7 | honda     | 1       | 2          |
+| 2020-12-7 | honda     | 2       | 1          |
++-----------+-----------+---------+------------+
+输出：
++-----------+-----------+--------------+-----------------+
+| date_id   | make_name | unique_leads | unique_partners |
++-----------+-----------+--------------+-----------------+
+| 2020-12-8 | toyota    | 2            | 3               |
+| 2020-12-7 | toyota    | 1            | 2               |
+| 2020-12-8 | honda     | 2            | 2               |
+| 2020-12-7 | honda     | 3            | 2               |
++-----------+-----------+--------------+-----------------+
+解释：
+在 2020-12-8，丰田（toyota）有领导者 = [0, 1] 和合伙人 = [0, 1, 2] ，同时本田（honda）有领导者 = [1, 2] 和合伙人 = [1, 2]。
+在 2020-12-7，丰田（toyota）有领导者 = [0] 和合伙人 = [1, 2] ，同时本田（honda）有领导者 = [0, 1, 2] 和合伙人 = [1, 2]。
+```
+
+SQL
+
+```sql
+select date_id,make_name
+,count(distinct lead_id) unique_leads
+,count(distinct partner_id) unique_partners
+from dailysales 
+group by date_id,make_name 
+```
+
+#### [1729. 求关注者的数量](https://leetcode.cn/problems/find-followers-count/)
+
+表： `Followers`
+
+```
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| user_id     | int  |
+| follower_id | int  |
++-------------+------+
+(user_id, follower_id) 是这个表的主键。
+该表包含一个关注关系中关注者和用户的编号，其中关注者关注用户。
+```
+
+写出 SQL 语句，对于每一个用户，返回该用户的关注者数量。
+
+按 `user_id` 的顺序返回结果表。
+
+查询结果的格式如下示例所示。
+
+ **示例 1：**
+
+```sql
+输入：
+Followers 表：
++---------+-------------+
+| user_id | follower_id |
++---------+-------------+
+| 0       | 1           |
+| 1       | 0           |
+| 2       | 0           |
+| 2       | 1           |
++---------+-------------+
+输出：
++---------+----------------+
+| user_id | followers_count|
++---------+----------------+
+| 0       | 1              |
+| 1       | 1              |
+| 2       | 2              |
++---------+----------------+
+解释：
+0 的关注者有 {1}
+1 的关注者有 {0}
+2 的关注者有 {0,1}
+```
+
+SQL
+
+```sql
+
+
+select user_id, 
+count(1) as followers_count
+from followers 
+group by user_id 
+order by user_id 
+```
+
