@@ -1492,3 +1492,260 @@ group by user_id
 order by user_id 
 ```
 
+#### [586. 订单最多的客户](https://leetcode.cn/problems/customer-placing-the-largest-number-of-orders/)
+
+SQL架构
+
+表: `Orders`
+
+```
++-----------------+----------+
+| Column Name     | Type     |
++-----------------+----------+
+| order_number    | int      |
+| customer_number | int      |
++-----------------+----------+
+Order_number是该表的主键。
+此表包含关于订单ID和客户ID的信息。
+```
+
+ 编写一个SQL查询，为下了 **最多订单** 的客户查找 `customer_number` 。
+
+测试用例生成后， **恰好有一个客户** 比任何其他客户下了更多的订单。
+
+查询结果格式如下所示。 
+
+**示例 1:**
+
+```sql
+输入: 
+Orders 表:
++--------------+-----------------+
+| order_number | customer_number |
++--------------+-----------------+
+| 1            | 1               |
+| 2            | 2               |
+| 3            | 3               |
+| 4            | 3               |
++--------------+-----------------+
+输出: 
++-----------------+
+| customer_number |
++-----------------+
+| 3               |
++-----------------+
+解释: 
+customer_number 为 '3' 的顾客有两个订单，比顾客 '1' 或者 '2' 都要多，因为他们只有一个订单。
+所以结果是该顾客的 customer_number ，也就是 3 。
+```
+
+SQL
+
+```sql
+select customer_number from (
+select customer_number,count(1) as num 
+from orders 
+group by customer_number
+order by num desc, order_number
+limit 1 
+) aa 
+
+SELECT
+    customer_number
+FROM
+    orders
+GROUP BY customer_number
+ORDER BY COUNT(*) DESC
+LIMIT 1
+;
+```
+
+#### [511. 游戏玩法分析 I](https://leetcode.cn/problems/game-play-analysis-i/)
+
+活动表 `Activity`：
+
+```
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| player_id    | int     |
+| device_id    | int     |
+| event_date   | date    |
+| games_played | int     |
++--------------+---------+
+表的主键是 (player_id, event_date)。
+这张表展示了一些游戏玩家在游戏平台上的行为活动。
+每行数据记录了一名玩家在退出平台之前，当天使用同一台设备登录平台后打开的游戏的数目（可能是 0 个）。
+```
+
+ 写一条 SQL 查询语句获取每位玩家 **第一次登陆平台的日期**。
+
+查询结果的格式如下所示：
+
+```sql
+Activity 表：
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1         | 2         | 2016-03-01 | 5            |
+| 1         | 2         | 2016-05-02 | 6            |
+| 2         | 3         | 2017-06-25 | 1            |
+| 3         | 1         | 2016-03-02 | 0            |
+| 3         | 4         | 2018-07-03 | 5            |
++-----------+-----------+------------+--------------+
+
+Result 表：
++-----------+-------------+
+| player_id | first_login |
++-----------+-------------+
+| 1         | 2016-03-01  |
+| 2         | 2017-06-25  |
+| 3         | 2016-03-02  |
++-----------+-------------+
+```
+
+SQL
+
+```
+select player_id,event_date as first_login from (
+select player_id,event_date ,row_number() over (partition by player_id order by event_date) as idx 
+from activity 
+) a
+where idx = 1;
+
+select 
+    player_id,
+    min(event_date) first_login
+from activity
+group by player_id;
+
+```
+
+#### [1890. 2020年最后一次登录](https://leetcode.cn/problems/the-latest-login-in-2020/)
+
+SQL架构
+
+表: `Logins`
+
+```
++----------------+----------+
+| 列名           | 类型      |
++----------------+----------+
+| user_id        | int      |
+| time_stamp     | datetime |
++----------------+----------+
+(user_id, time_stamp) 是这个表的主键。
+每一行包含的信息是user_id 这个用户的登录时间。
+```
+
+ 编写一个 SQL 查询，该查询可以获取在 `2020` 年登录过的所有用户的本年度 **最后一次** 登录时间。结果集 **不** 包含 `2020` 年没有登录过的用户。
+
+返回的结果集可以按 **任意顺序** 排列。
+
+查询结果格式如下例。 
+
+**示例 1:**
+
+```sql
+输入：
+Logins 表:
++---------+---------------------+
+| user_id | time_stamp          |
++---------+---------------------+
+| 6       | 2020-06-30 15:06:07 |
+| 6       | 2021-04-21 14:06:06 |
+| 6       | 2019-03-07 00:18:15 |
+| 8       | 2020-02-01 05:10:53 |
+| 8       | 2020-12-30 00:46:50 |
+| 2       | 2020-01-16 02:49:50 |
+| 2       | 2019-08-25 07:59:08 |
+| 14      | 2019-07-14 09:00:00 |
+| 14      | 2021-01-06 11:59:59 |
++---------+---------------------+
+输出：
++---------+---------------------+
+| user_id | last_stamp          |
++---------+---------------------+
+| 6       | 2020-06-30 15:06:07 |
+| 8       | 2020-12-30 00:46:50 |
+| 2       | 2020-01-16 02:49:50 |
++---------+---------------------+
+解释：
+6号用户登录了3次，但是在2020年仅有一次，所以结果集应包含此次登录。
+8号用户在2020年登录了2次，一次在2月，一次在12月，所以，结果集应该包含12月的这次登录。
+2号用户登录了2次，但是在2020年仅有一次，所以结果集应包含此次登录。
+14号用户在2020年没有登录，所以结果集不应包含。
+```
+
+SQL
+
+```
+select user_id,max(time_stamp) as last_stamp 
+from logins 
+where left(time_stamp,4) ='2020'
+group by user_id;
+
+select user_id,max(time_stamp) as last_stamp 
+from logins 
+where year(time_stamp) ='2020'
+group by user_id 
+```
+
+#### [1741. 查找每个员工花费的总时间](https://leetcode.cn/problems/find-total-time-spent-by-each-employee/)
+
+表: `Employees`
+
+```
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| emp_id      | int  |
+| event_day   | date |
+| in_time     | int  |
+| out_time    | int  |
++-------------+------+
+(emp_id, event_day, in_time) 是这个表的主键。
+该表显示了员工在办公室的出入情况。
+event_day 是此事件发生的日期，in_time 是员工进入办公室的时间，而 out_time 是他们离开办公室的时间。
+in_time 和 out_time 的取值在1到1440之间。
+题目保证同一天没有两个事件在时间上是相交的，并且保证 in_time 小于 out_time。
+```
+
+ 编写一个SQL查询以计算每位员工每天在办公室花费的总时间（以分钟为单位）。 请注意，在一天之内，同一员工是可以多次进入和离开办公室的。 在办公室里一次进出所花费的时间为out_time 减去 in_time。
+
+返回结果表单的顺序无要求。
+查询结果的格式如下：
+
+```
+Employees table:
++--------+------------+---------+----------+
+| emp_id | event_day  | in_time | out_time |
++--------+------------+---------+----------+
+| 1      | 2020-11-28 | 4       | 32       |
+| 1      | 2020-11-28 | 55      | 200      |
+| 1      | 2020-12-03 | 1       | 42       |
+| 2      | 2020-11-28 | 3       | 33       |
+| 2      | 2020-12-09 | 47      | 74       |
++--------+------------+---------+----------+
+Result table:
++------------+--------+------------+
+| day        | emp_id | total_time |
++------------+--------+------------+
+| 2020-11-28 | 1      | 173        |
+| 2020-11-28 | 2      | 30         |
+| 2020-12-03 | 1      | 41         |
+| 2020-12-09 | 2      | 27         |
++------------+--------+------------+
+雇员 1 有三次进出: 有两次发生在 2020-11-28 花费的时间为 (32 - 4) + (200 - 55) = 173, 有一次发生在 2020-12-03 花费的时间为 (42 - 1) = 41。
+雇员 2 有两次进出: 有一次发生在 2020-11-28 花费的时间为 (33 - 3) = 30,  有一次发生在 2020-12-09 花费的时间为 (74 - 47) = 27。
+```
+
+SQL
+
+```
+select event_day as day ,
+emp_id,sum(out_time - in_time) as total_time 
+from employees 
+group by event_day,emp_id
+```
+
