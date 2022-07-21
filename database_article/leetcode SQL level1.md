@@ -1749,3 +1749,452 @@ from employees
 group by event_day,emp_id
 ```
 
+#### [1393. 股票的资本损益](https://leetcode.cn/problems/capital-gainloss/)
+
+`Stocks` 表：
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| stock_name    | varchar |
+| operation     | enum    |
+| operation_day | int     |
+| price         | int     |
++---------------+---------+
+(stock_name, day) 是这张表的主键
+operation 列使用的是一种枚举类型，包括：('Sell','Buy')
+此表的每一行代表了名为 stock_name 的某支股票在 operation_day 这一天的操作价格。
+保证股票的每次'Sell'操作前，都有相应的'Buy'操作。
+```
+
+ 编写一个SQL查询来报告每支股票的资本损益。
+
+股票的资本损益是一次或多次买卖股票后的全部收益或损失。
+
+以任意顺序返回结果即可。
+
+SQL查询结果的格式如下例所示：
+
+```sql
+Stocks 表:
++---------------+-----------+---------------+--------+
+| stock_name    | operation | operation_day | price  |
++---------------+-----------+---------------+--------+
+| Leetcode      | Buy       | 1             | 1000   |
+| Corona Masks  | Buy       | 2             | 10     |
+| Leetcode      | Sell      | 5             | 9000   |
+| Handbags      | Buy       | 17            | 30000  |
+| Corona Masks  | Sell      | 3             | 1010   |
+| Corona Masks  | Buy       | 4             | 1000   |
+| Corona Masks  | Sell      | 5             | 500    |
+| Corona Masks  | Buy       | 6             | 1000   |
+| Handbags      | Sell      | 29            | 7000   |
+| Corona Masks  | Sell      | 10            | 10000  |
++---------------+-----------+---------------+--------+
+
+Result 表:
++---------------+-------------------+
+| stock_name    | capital_gain_loss |
++---------------+-------------------+
+| Corona Masks  | 9500              |
+| Leetcode      | 8000              |
+| Handbags      | -23000            |
++---------------+-------------------+
+Leetcode 股票在第一天以1000美元的价格买入，在第五天以9000美元的价格卖出。资本收益=9000-1000=8000美元。
+Handbags 股票在第17天以30000美元的价格买入，在第29天以7000美元的价格卖出。资本损失=7000-30000=-23000美元。
+Corona Masks 股票在第1天以10美元的价格买入，在第3天以1010美元的价格卖出。在第4天以1000美元的价格再次购买，在第5天以500美元的价格出售。最后，它在第6天以1000美元的价格被买走，在第10天以10000美元的价格被卖掉。资本损益是每次（’Buy'->'Sell'）操作资本收益或损失的和=（1010-10）+（500-1000）+（10000-1000）=1000-500+9000=9500美元。
+```
+
+SQL
+
+```sql
+select stock_name, sum(case when operation='Buy' then - 1*price
+else price end) as capital_gain_loss
+from stocks 
+group by stock_name 
+```
+
+#### [1407. 排名靠前的旅行者](https://leetcode.cn/problems/top-travellers/)
+
+表：`Users`
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| id            | int     |
+| name          | varchar |
++---------------+---------+
+id 是该表单主键。
+name 是用户名字。
+```
+
+表：`Rides`
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| id            | int     |
+| user_id       | int     |
+| distance      | int     |
++---------------+---------+
+id 是该表单主键。
+user_id 是本次行程的用户的 id, 而该用户此次行程距离为 distance 。
+```
+
+ 写一段 SQL , 报告每个用户的旅行距离。
+
+返回的结果表单，以 `travelled_distance` **降序排列** ，如果有两个或者更多的用户旅行了相同的距离, 那么再以 `name` **升序排列** 。
+
+查询结果格式如下例所示。
+
+```
+Users 表：
++------+-----------+
+| id   | name      |
++------+-----------+
+| 1    | Alice     |
+| 2    | Bob       |
+| 3    | Alex      |
+| 4    | Donald    |
+| 7    | Lee       |
+| 13   | Jonathan  |
+| 19   | Elvis     |
++------+-----------+
+
+Rides 表：
++------+----------+----------+
+| id   | user_id  | distance |
++------+----------+----------+
+| 1    | 1        | 120      |
+| 2    | 2        | 317      |
+| 3    | 3        | 222      |
+| 4    | 7        | 100      |
+| 5    | 13       | 312      |
+| 6    | 19       | 50       |
+| 7    | 7        | 120      |
+| 8    | 19       | 400      |
+| 9    | 7        | 230      |
++------+----------+----------+
+
+Result 表：
++----------+--------------------+
+| name     | travelled_distance |
++----------+--------------------+
+| Elvis    | 450                |
+| Lee      | 450                |
+| Bob      | 317                |
+| Jonathan | 312                |
+| Alex     | 222                |
+| Alice    | 120                |
+| Donald   | 0                  |
++----------+--------------------+
+Elvis 和 Lee 旅行了 450 英里，Elvis 是排名靠前的旅行者，因为他的名字在字母表上的排序比 Lee 更小。
+Bob, Jonathan, Alex 和 Alice 只有一次行程，我们只按此次行程的全部距离对他们排序。
+Donald 没有任何行程, 他的旅行距离为 0。
+```
+
+SQL
+
+```sql
+select a.name,coalesce(sum(b.distance),0)as travelled_distance 
+from users a 
+left join rides b on a.id=b.user_id 
+group by a.id 
+order by travelled_distance desc,name 
+```
+
+#### [1158. 市场分析 I](https://leetcode.cn/problems/market-analysis-i/)
+
+Table: `Users`
+
+```
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| user_id        | int     |
+| join_date      | date    |
+| favorite_brand | varchar |
++----------------+---------+
+此表主键是 user_id。
+表中描述了购物网站的用户信息，用户可以在此网站上进行商品买卖。
+```
+
+ Table: `Orders`
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| order_id      | int     |
+| order_date    | date    |
+| item_id       | int     |
+| buyer_id      | int     |
+| seller_id     | int     |
++---------------+---------+
+此表主键是 order_id。
+外键是 item_id 和（buyer_id，seller_id）。
+```
+
+ Table: `Items`
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| item_id       | int     |
+| item_brand    | varchar |
++---------------+---------+
+此表主键是 item_id。
+```
+
+ 请写出一条SQL语句以查询每个用户的注册日期和在 **`2019`** 年作为买家的订单总数。
+
+以 **任意顺序** 返回结果表。
+
+查询结果格式如下。
+
+ **示例 1:**
+
+```
+输入：
+Users 表:
++---------+------------+----------------+
+| user_id | join_date  | favorite_brand |
++---------+------------+----------------+
+| 1       | 2018-01-01 | Lenovo         |
+| 2       | 2018-02-09 | Samsung        |
+| 3       | 2018-01-19 | LG             |
+| 4       | 2018-05-21 | HP             |
++---------+------------+----------------+
+Orders 表:
++----------+------------+---------+----------+-----------+
+| order_id | order_date | item_id | buyer_id | seller_id |
++----------+------------+---------+----------+-----------+
+| 1        | 2019-08-01 | 4       | 1        | 2         |
+| 2        | 2018-08-02 | 2       | 1        | 3         |
+| 3        | 2019-08-03 | 3       | 2        | 3         |
+| 4        | 2018-08-04 | 1       | 4        | 2         |
+| 5        | 2018-08-04 | 1       | 3        | 4         |
+| 6        | 2019-08-05 | 2       | 2        | 4         |
++----------+------------+---------+----------+-----------+
+Items 表:
++---------+------------+
+| item_id | item_brand |
++---------+------------+
+| 1       | Samsung    |
+| 2       | Lenovo     |
+| 3       | LG         |
+| 4       | HP         |
++---------+------------+
+输出：
++-----------+------------+----------------+
+| buyer_id  | join_date  | orders_in_2019 |
++-----------+------------+----------------+
+| 1         | 2018-01-01 | 1              |
+| 2         | 2018-02-09 | 2              |
+| 3         | 2018-01-19 | 0              |
+| 4         | 2018-05-21 | 0              |
++-----------+------------+----------------+
+```
+
+SQL
+
+```sql
+select a.user_id buyer_id ,a.join_date ,coalesce(b.num,0) as orders_in_2019
+from users a 
+left join (
+select buyer_id,count(1) num from orders where year(order_date)='2019'
+group by buyer_id
+) b on b.buyer_id =a.user_id 
+```
+
+#### [182. 查找重复的电子邮箱](https://leetcode.cn/problems/duplicate-emails/)
+
+编写一个 SQL 查询，查找 `Person` 表中所有重复的电子邮箱。
+
+**示例：**
+
+```
++----+---------+
+| Id | Email   |
++----+---------+
+| 1  | a@b.com |
+| 2  | c@d.com |
+| 3  | a@b.com |
++----+---------+
+```
+
+根据以上输入，你的查询应返回以下结果：
+
+```
++---------+
+| Email   |
++---------+
+| a@b.com |
++---------+
+```
+
+**说明：**所有电子邮箱都是小写字母。
+
+SQL
+
+```sql
+select email from person
+group by email
+having count(1)>1
+```
+
+#### [1050. 合作过至少三次的演员和导演](https://leetcode.cn/problems/actors-and-directors-who-cooperated-at-least-three-times/)
+
+`ActorDirector` 表：
+
+```
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| actor_id    | int     |
+| director_id | int     |
+| timestamp   | int     |
++-------------+---------+
+timestamp 是这张表的主键.
+```
+
+ 写一条SQL查询语句获取合作过至少三次的演员和导演的 id 对 `(actor_id, director_id)`
+
+**示例：**
+
+```
+ActorDirector 表：
++-------------+-------------+-------------+
+| actor_id    | director_id | timestamp   |
++-------------+-------------+-------------+
+| 1           | 1           | 0           |
+| 1           | 1           | 1           |
+| 1           | 1           | 2           |
+| 1           | 2           | 3           |
+| 1           | 2           | 4           |
+| 2           | 1           | 5           |
+| 2           | 1           | 6           |
++-------------+-------------+-------------+
+
+Result 表：
++-------------+-------------+
+| actor_id    | director_id |
++-------------+-------------+
+| 1           | 1           |
++-------------+-------------+
+唯一的 id 对是 (1, 1)，他们恰好合作了 3 次。
+```
+
+SQL
+
+```sql
+select actor_id,director_id 
+from actordirector 
+group by actor_id,director_id 
+having count(1) > 2
+```
+
+#### [1587. 银行账户概要 II](https://leetcode.cn/problems/bank-account-summary-ii/)
+
+表: `Users`
+
+```
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| account      | int     |
+| name         | varchar |
++--------------+---------+
+account 是该表的主键.
+表中的每一行包含银行里中每一个用户的账号.
+```
+
+ 表: `Transactions`
+
+```
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| trans_id      | int     |
+| account       | int     |
+| amount        | int     |
+| transacted_on | date    |
++---------------+---------+
+trans_id 是该表主键.
+该表的每一行包含了所有账户的交易改变情况.
+如果用户收到了钱, 那么金额是正的; 如果用户转了钱, 那么金额是负的.
+所有账户的起始余额为 0.
+```
+
+ 写一个 SQL, 报告余额高于 10000 的所有用户的名字和余额. 账户的余额等于包含该账户的所有交易的总和.
+
+返回结果表单没有顺序要求.
+
+查询结果格式如下例所示.
+
+```
+Users table:
++------------+--------------+
+| account    | name         |
++------------+--------------+
+| 900001     | Alice        |
+| 900002     | Bob          |
+| 900003     | Charlie      |
++------------+--------------+
+
+Transactions table:
++------------+------------+------------+---------------+
+| trans_id   | account    | amount     | transacted_on |
++------------+------------+------------+---------------+
+| 1          | 900001     | 7000       |  2020-08-01   |
+| 2          | 900001     | 7000       |  2020-09-01   |
+| 3          | 900001     | -3000      |  2020-09-02   |
+| 4          | 900002     | 1000       |  2020-09-12   |
+| 5          | 900003     | 6000       |  2020-08-07   |
+| 6          | 900003     | 6000       |  2020-09-07   |
+| 7          | 900003     | -4000      |  2020-09-11   |
++------------+------------+------------+---------------+
+
+Result table:
++------------+------------+
+| name       | balance    |
++------------+------------+
+| Alice      | 11000      |
++------------+------------+
+Alice 的余额为(7000 + 7000 - 3000) = 11000.
+Bob 的余额为1000.
+Charlie 的余额为(6000 + 6000 - 4000) = 8000.
+```
+
+```sql
+select a.name ,sum(b.amount) as balance 
+from users a
+left join Transactions b
+on a.account =b.account 
+group by a.name 
+having sum(b.amount) > 10000
+```
+
+#### [1084. 销售分析III](https://leetcode.cn/problems/sales-analysis-iii/)
+
+
+
+```sql
+SELECT 
+    s.product_id, p.product_name
+FROM 
+    sales s
+LEFT JOIN 
+    product p 
+ON 
+    s.product_id = p.product_id
+GROUP BY 
+    s.product_id
+HAVING MIN(sale_date) >= '2019-01-01' 
+AND MAX(sale_date) <= '2019-03-31';	
+```
+
