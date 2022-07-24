@@ -84,5 +84,5 @@ envision ： imagination
 
 byline : 署名行，球门线
 
-
+reveal make know
 
