@@ -86,3 +86,9 @@ byline : 署名行，球门线
 
 reveal make know
 
+cracked : damaged,insane
+
+Canny :having or showing shrewdness and good judgment, especially in money or business matters.
+
+Uncanny: strange or mysterious, especially in an unsettling way.
+
