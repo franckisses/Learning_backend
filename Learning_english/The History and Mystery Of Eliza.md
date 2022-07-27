@@ -92,3 +92,9 @@ Canny :having or showing shrewdness and good judgment, especially in money or bu
 
 Uncanny: strange or mysterious, especially in an unsettling way.
 
+paranoid: of, characterized by, or suffering from the mental condition of paranoia. a person who is paranoid.
+
+schizophrenia: a long-term mental disorder of a type involving a breakdown in the relation between thought, emotion, and behavior, leading to faulty perception, inappropriate actions and feelings, withdrawal from reality and personal relationships into fantasy and delusion, and a sense of mental fragmentation.
+
+psychiatrist:a medical practitioner specializing in the diagnosis and treatment of mental illness.
+
