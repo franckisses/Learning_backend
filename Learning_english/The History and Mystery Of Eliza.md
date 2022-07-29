@@ -98,3 +98,50 @@ schizophrenia: a long-term mental disorder of a type involving a breakdown in th
 
 psychiatrist:a medical practitioner specializing in the diagnosis and treatment of mental illness.
 
+replete ① (with food) 饱食的  ‹person›*② (fully supplied) 装满的 house›*
+
+▸ the textbook is replete with facts, figures and charts 课本里有丰富的资料、数据和图表
+
+floppy 
+
+A .adjective  ‹hat,* *clothes›*
+
+ ▸ to let one's arm go floppy  
+
+ ▸ toy rabbits with big floppy ears 耷拉着大耳朵的玩具兔子
+
+ B.noun 软磁盘 ruǎncípán
+
+essentially : basically. more or less.realy. very
+
+Ungeon :a strong underground prison cell, especially in a castle.
+
+knockoff a copy or imitation, especially of an expensive or designer product.
+
+cogntive : cogntive science/theory 认知的
+
+discourse：written or spoken communication or debate.
+
+infuse : fill; pervade.充满，被浸泡
+
+fleece 1.the woolly covering of a sheep or goat.2a soft warm fabric with a texture similar to sheep's wool, used as a lining material.
+
+​          obtain a great deal of money from (someone), typically by overcharging or swindling them.
+
+Cambarian :the first period in the Paleozoic era, or the system of rocks deposited during it.
+
+molecular biology: the branch of biology that deals with the structure and function of the macromolecules (e.g. proteins and nucleic acids) essential to life.
+
+genealogy：
+
+① uncountable (study) 系谱学  ② countable (ancestry) 家系; (diagram) 系谱图 
+
+brouhaha：a noisy and overexcited reaction or response to something.
+
+practical：
+
+​    of or concerned with the actual doing or use of something rather than with theory and ideas. 
+
+​    (of an idea, plan, or method) likely to succeed or be effective in real circumstances; feasible.
+
+​    so nearly the case that it can be regarded as so; virtual.
