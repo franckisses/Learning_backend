@@ -1,3 +1,5 @@
+The History and Mystery of Eliza - https://corecursive.com/eliza-with-jeff-shrager/#]
+
 psychologist 心理学家
 
 philosophers 哲学家，达观的人
@@ -145,3 +147,17 @@ practical：
 ​    (of an idea, plan, or method) likely to succeed or be effective in real circumstances; feasible.
 
 ​    so nearly the case that it can be regarded as so; virtual.
+
+archive:
+
+​    place or store (something) in an archive.
+
+​    a collection of historical documents or records providing information about a place, institution, or group of people.
+
+Demonstrate:
+
+​	take part in a public demonstration.
+
+​	clearly show the existence or truth of (something) by giving proof or evidence.
+
+​	give a practical exhibition and explanation of (how a machine, skill, or craft works or is performed).
