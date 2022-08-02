@@ -82,8 +82,71 @@ Tophit.mp3
 
 在遍历的时候可以使用**$@**来接受参数，这样shell 就会认为是一个列表。而不会解析为字符串
 
+```shell
+echo "$@"
+for FN in "$@"
+do
+    echo "$FN"
+    chmod 777 "$FN"
+done
 ```
 
+统计参数数量
+
+```shell
+$ cat check_arg_count.sh   
+#!/usr/bin/env bash
+
+#实例文件 check_arg_count
+
+#检查参数数量
+#使用下列语法 if [ $# -lt 3 ]
+
+if (( $# < 3 ))
+then
+    printf "%b" "Error. not enough arguement.\n" >&2
+    printf "%b" "usage: myscript file1 op file2\n" >&2
+    exit 1
+elif (( $# > 3 ))
+then
+    printf "%b" "Error. not enough arguement.\n" >&2
+    printf "%b" "usage: myscript file1 op file2\n" >&2
+    exit 2
+else
+    printf "%b" "Argument count correct. Proceeding... \n"
+fi
+
+$ sh check_arg_count.sh file1 op file2                        
+Argument count correct. Proceeding...
+$ sh check_arg_count.sh file1 op
+Error. not enough arguement.
+usage: myscript file1 op file2
+$ sh check_arg_count.sh file1 op file2 file3                      
+Error. not enough arguement.
+usage: myscript file1 op file2
 ```
 
- 
+丢弃参数
+
+```shell
+$ cat use_up_option.sh
+#!/usr/bin/env bash
+
+# 使用丢弃一个选项
+VERBOSE=0
+if [[ $1 = -v ]]
+then
+    VERBOSE=1
+    shift
+fi
+
+for FN in "$@"
+do
+    if (( VERBOSE == 1 ))
+    then
+        ehco changing $FN
+    fi
+    chmod 0750 "$FN"
+done
+```
+
