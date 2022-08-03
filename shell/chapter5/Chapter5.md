@@ -150,3 +150,49 @@ do
 done
 ```
 
+获取默认值
+
+```shell
+$ cat get_default.sh
+FILEDIR=${1:-/tmp}
+echo $FILEDIR
+
+$ sh get_default.sh
+/tmp
+$ sh get_default.sh /Users/yangong
+/Users/yangong
+```
+
+设置默认值
+
+```shell
+$ cat set_default.sh
+
+echo $home
+echo ${home:=/Users/gongyan}
+echo $home
+```
+
+DIFF: :- 与 := ,:- 返回值。但不赋值。 := 执行赋值，并返回运算符右侧的值。
+
+ 对不存在消息输出错误消息
+
+```shell
+# cookbook filename: check_unset_parms
+#
+USAGE="usage: myscript scratchdir sourcefile conversion"
+FILEDIR=${1:?"Error. You must supply a scratch directory."}
+FILESRC=${2:?"Error. You must supply a source file."}
+CVTTYPE=${3:?"Error. ${USAGE}"}
+```
+
+修改部分字符串
+
+```shell
+for FN in *.xlsx
+do
+    mv "$(pwd)/${FN}" "${FN%.xlsx}"
+done
+# 可以用于修改文件名
+```
+
