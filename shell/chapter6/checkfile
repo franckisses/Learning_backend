@@ -2,8 +2,8 @@
 # cookbook filename: checkfile
 #
 DIRPLACE=/tmp
-INFILE=/Users/gongyan/Project/liangpi/shell/chapter6
-OUTFILE=/Users/gongyan/Project/liangpi/shell/chapter6
+INFILE=/Users/gongyan/Project/liangpi/shell/chapter6/amazing.data
+OUTFILE=/Users/gongyan/Project/liangpi/shell/chapter6/more.results
 
 if [ -d "$DIRPLACE" ]
 then
