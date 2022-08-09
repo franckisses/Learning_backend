@@ -1,0 +1,3 @@
+$command -v ls 
+
+command -v commands 会显示原命令的相关信息或者是执行文件路径
