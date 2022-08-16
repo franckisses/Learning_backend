@@ -50,6 +50,46 @@ parseViaArray.sh HASE 1 link(s) and is 195 bytes long.
 
 用read语句解析文本
 
+```shell
+ $ cat readtest.sh
+
+#!/usr/bin/env bash
+
+
+read -a MYRAY
+
+echo $MYRAY
+echo $MYRAY[3]
+
+ $ sh readtest.sh
+we are the champions!
+we
+we[3]
 ```
+
+读取整个文件
+
+```shell
+mapfile -t -s 1 -n 1500 -C showprg -c 100 BIGDATA < /tmp/myfile.data
+-s 1 跳过第一行
+-n 1500 读取到1500行
+-c 100 每次读取100行
+
+ $ cat readarray.sh
+
+function showprg ()
+{
+    printf '.'
+}
+
+ls -l /usr/bin > /tmp/myfile.data
+
+mapfile -t -s 1 -n 1500 -C showprg -c 100 BIGDATA < /tmp/myfile.data
+
+echo
+
+
+siz=${#BIGDATA[@]}
+echo "size: ${siz}"
 ```
 
