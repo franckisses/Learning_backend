@@ -118,9 +118,132 @@ do
 done
 ```
 
-一次提取一个字符
+一次提取一个字
+
+```shell
+$ cat onebyone.sh  
+#########################################################################
+# File Name:    onebyone.sh
+# Author:       Franckisses
+# Mail:         franckisses@gmail.com
+# Created Time: 2022-08-17
+#########################################################################
+#!/bin/bash
+# 从输入中一次解析 一个字符
+
+while read ALINE
+do
+    for ((i=0; i < ${#ALINE}; i++))
+    do
+        ACHAR=${ALINE:i:1}
+	echo $ACHAR
+    done
+done
+$ sh onebyone.sh
+test
+t
+e
+s
+t
+nihao
+n
+i
+h
+a
+o
+women
+w
+o
+m
+e
+n
+```
+
+通过标准文件初始化数据看
+
+```shell
+ $ cat dbiniter.sh
+#########################################################################
+# File Name:
+# Author:       Franckisses
+# Mail:         franckisses@gmail.com
+# Created Time: 2022-08-17
+#########################################################################
+#!/usr/bin/env bash
+# 通过标准文件初始化数据库
+
+DBLIST=$(mysql -e "SHOW DATABASES;" | tail -n +2)
+select DB in $DBLIST "new..."
+do
+    if [[ $DB == "new..." ]]
+    then
+        printf "%b" "name for new db: "
+        read DB rest
+        echo creating new database $DB
+        mysql -e "CREATE DATABASE IF NOT EXISTS $DB;"
+    fi
+
+    if [ -n "$DB" ]
+    then
+        echo Initializing database: $DB
+        mysql $DB < ourInit.sql
+    fi
+done
+```
+
+提取数据中特定字段
+
+```shell
+ $ sed -n '11,20p' /etc/passwd
+nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false
+root:*:0:0:System Administrator:/var/root:/bin/sh
+daemon:*:1:1:System Services:/var/root:/usr/bin/false
+_uucp:*:4:4:Unix to Unix Copy Protocol:/var/spool/uucp:/usr/sbin/uucico
+_taskgated:*:13:13:Task Gate Daemon:/var/empty:/usr/bin/false
+_networkd:*:24:24:Network Services:/var/networkd:/usr/bin/false
+_installassistant:*:25:25:Install Assistant:/var/empty:/usr/bin/false
+_lp:*:26:26:Printing Services:/var/spool/cups:/usr/bin/false
+_postfix:*:27:27:Postfix Mail Server:/var/spool/postfix:/usr/bin/false
+_scsd:*:31:31:Service Configuration Service:/var/empty:/usr/bin/false
+
+ $ sed -n '11,20p' /etc/passwd | cut -d':' -f1,6,7
+nobody:/var/empty:/usr/bin/false
+root:/var/root:/bin/sh
+daemon:/var/root:/usr/bin/false
+_uucp:/var/spool/uucp:/usr/sbin/uucico
+_taskgated:/var/empty:/usr/bin/false
+_networkd:/var/networkd:/usr/bin/false
+_installassistant:/var/empty:/usr/bin/false
+_lp:/var/spool/cups:/usr/bin/false
+_postfix:/var/spool/postfix:/usr/bin/false
+_scsd:/var/empty:/usr/bin/false
 
 ```
+
+更新数据文件中特定的字段
+
+```shell
+$ cat data_file
+Line 1 ends
+Line 2 ends
+Line 3 ends
+Line 4 ends
+Line 5 ends
+Line 6 ends
+$ awk '{print $1,$2+5,$3}' data_file       
+Line 6 ends
+Line 7 ends
+Line 8 ends
+Line 9 ends
+Line 10 ends
+Line 11 ends
+# 如果第二个字段中包含3，将其修改为8 并做标记
+ $ awk '{if ($2 == "3") print $1, $2+5, $3, "Tweaked" ; else print $0;}' data_file
+Line 1 ends
+Line 2 ends
+Line 8 ends Tweaked
+Line 4 ends
+Line 5 ends
+Line 6 ends
 ```
 
-![image-20220816231540100](/Users/gongyan/Library/Application Support/typora-user-images/image-20220816231540100.png)
