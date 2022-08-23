@@ -19,3 +19,89 @@ for x in /path/to/date*/name/*.zip; do unzip "$x"; done
 for x in $(ls /path/to/date*/name/*.zip 2>/dev/null); do unzip $x; done
 ```
 
+将数据追加到文件开头
+
+```shell
+# shell 的方式
+$ temp_file="temp.123"
+$ (echo 'static header line1'; cat data_file) > $temp_file && cat $temp_file > data_file 
+$ rm $temp_file 
+$ unset temp_file
+
+# sed 方式
+$ cat data_file                                                    
+1 foo
+2 bar
+3 baz
+$ sed -e '1i\
+quote> static header line1
+quote> ' data_file
+static header line1
+1 foo
+2 bar
+3 baz
+
+$ sed -e '1i\   
+static header line1\
+static header line2
+' data_file
+static header line1
+static header line2
+1 foo
+2 bar
+3 baz
+$ cat header_file
+Header line1
+Header line2
+$ sed -e '$r data_file' header_file
+Header line1
+Header line2
+1 foo
+2 bar
+3 baz
+```
+
+文件比对
+
+```shell
+$ cat right            
+record_1
+record_2
+record_4
+record_5
+record_6.differ
+record_7
+record_8
+record_9.right only
+record_10
+$ cat left
+record_1
+record_2.left only
+record_3
+record_4
+record_5.differ
+record_6
+record_7
+record_8
+record_9
+record_10
+$ comm -23 left right
+record_2.left only
+record_3
+record_5.differ
+record_6
+record_9
+record_10
+$ comm -13 left right
+record_2
+record_5
+record_6.differ
+record_9.right only
+record_10
+$ comm -12 left right                                                  1 ↵
+record_1
+record_4
+record_7
+record_8
+```
+
