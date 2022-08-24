@@ -104,4 +104,7 @@ record_4
 record_7
 record_8
 ```
-
+部分windows上开发的shell脚本无法在Linux 上面运行，此时可以使用dos2unix 命令来转换
+```
+dos2unix original_file
+```
