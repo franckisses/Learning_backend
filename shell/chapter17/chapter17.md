@@ -108,3 +108,30 @@ record_8
 ```
 dos2unix original_file
 ```
+
+对行进行编号
+
+```shell
+$ cat -n right
+     1	record_1
+     2	record_2
+     3	record_4
+     4	record_5
+     5	record_6.differ
+     6	record_7
+     7	record_8
+     8	record_9.right only
+     9	record_10
+$ less -N right
+$ nl right
+     1	record_1
+     2	record_2
+     3	record_4
+     4	record_5
+     5	record_6.differ
+     6	record_7
+     7	record_8
+     8	record_9.right only
+     9	record_10
+```
+
