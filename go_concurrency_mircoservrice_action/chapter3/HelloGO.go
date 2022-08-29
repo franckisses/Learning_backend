@@ -103,3 +103,18 @@ func main()  {
 	 }
 
 }
+
+/*
+$ go run HelloGO.go
+Enter 'EOF' to shut down:
+AI: 你想和我说什么呢?
+你好
+AI: 好呀～有什么新鲜事儿了？
+我肚子疼
+AI: 你亲戚来看你了？
+是的
+AI: 在我眼里你说啥都是对的
+我肚子疼
+AI: 该，让你喝，让你吃＿赶紧吃药，赶紧睡觉
+^Csignal: interrupt
+/*
