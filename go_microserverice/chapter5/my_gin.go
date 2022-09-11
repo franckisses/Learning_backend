@@ -1,4 +1,4 @@
-package main 
+package main
 
 import "github.com/gin-gonic/gin"
 
@@ -9,5 +9,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-	router.Run(:8080) // 默认监听 0.0.0.0:8080
+	router.Run() // 默认监听 0.0.0.0:8080
 }
