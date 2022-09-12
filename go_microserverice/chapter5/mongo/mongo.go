@@ -1,18 +1,17 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type User struct {
-	Id          int
+	Id          string
 	Name        string
 	Habits      string
 	CreatedTime string
@@ -31,35 +30,20 @@ var tpl = `<html>
 </body>
 </html>`
 
-var db *sql.DB
-
-var err error
-
-func init() {
-	db, err = sql.Open("mysql",
-		"root:123456@tcp(localhost:3306)/mysql_test?charset=utf8")
+func connect(cName string) (*mgo.Session, *mgo.Collection) {
+	session, err := mgo.Dial("mongodb://localhost:27017/") //Mongodb's connection
 	checkErr(err)
+	session.SetMode(mgo.Monotonic, true)
+	//return a instantiated collect
+	return session, session.DB("test").C(cName)
 }
 
-func queryByName(name string) User {
-	user := User{}
-	stmt, err := db.Prepare("select * from user where name=?")
+func queryByName(name string) []User {
+	var user []User
+	s, c := connect("user")
+	defer s.Close()
+	err := c.Find(bson.M{"name": name}).All(&user)
 	checkErr(err)
-
-	rows, _ := stmt.Query(name)
-
-	fmt.Println("\nafter deleting records: ")
-	for rows.Next() {
-		var id int
-		var name string
-		var habits string
-		var createdTime string
-		err = rows.Scan(&id, &name, &habits, &createdTime)
-		checkErr(err)
-		fmt.Printf("[%d, %s, %s, %s]\n", id, name, habits, createdTime)
-		user = User{id, name, habits, createdTime}
-		break
-	}
 	return user
 }
 
@@ -77,17 +61,12 @@ func submitForm(w http.ResponseWriter, r *http.Request) {
 	log.Println(t.Execute(w, nil))
 }
 
-func store(user User) {
+func store(user User) error {
 	//插入数据
-	stmt, err := db.Prepare("INSERT INTO user SET name=?,habits=?,created_time=?")
-	t := time.Now().UTC().Format("2006-01-02")
-	res, err := stmt.Exec(user.Name, user.Habits, t)
-	checkErr(err)
-
-	id, err := res.LastInsertId()
-	checkErr(err)
-
-	fmt.Printf("last insert id is: %d\n", id)
+	s, c := connect("user")
+	defer s.Close()
+	user.Id = bson.NewObjectId().Hex()
+	return c.Insert(&user)
 }
 
 func userInfo(w http.ResponseWriter, r *http.Request) {
