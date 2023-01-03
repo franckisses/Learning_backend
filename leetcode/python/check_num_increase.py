@@ -19,10 +19,14 @@
 class Solution:
     def areNumberascending(self, s: str) -> bool:
         num_list = [x for x in s.split() if x.isdigit()]
-        for i in range(1, len(num_list)-1):
-            if num_list[i-1] > num_list[i]:
+        temp = 0
+        for i in num_list:
+            if int(i) > temp:
+                temp = int(i)
+            else:
                 return False
         return True
+
 
 
 
