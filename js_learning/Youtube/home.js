@@ -3,7 +3,6 @@ console.log('hello');
 
 // alter('hello this is qazi')
 
-
 var b = 'smoothie';
 
 console.log(b);
@@ -113,7 +112,7 @@ console.log(fruits.join('*'))
 console.log(fruits, fruits.pop() , fruits)
 console.log(fruits, fruits.push('blackberries') , fruits)
 fruits[4] = 'new fruit'
-console.log(fruits)
+console.log(fruits)··
 
 fruits.shift() // remove first element from a list
 console.log(fruits)
